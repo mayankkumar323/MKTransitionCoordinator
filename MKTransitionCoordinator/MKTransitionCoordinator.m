@@ -38,7 +38,6 @@
     CGPoint velocity = [recognizer velocityInView:[UIApplication sharedApplication].keyWindow];
     
     if (recognizer.state == UIGestureRecognizerStateBegan) {
-        // We're being invoked via a gesture recognizer – we are necessarily interactive
         self.interactive = YES;
         
         if (location.x > CGRectGetMidX(recognizer.view.bounds)) {
@@ -53,7 +52,6 @@
             [self.parentViewController.navigationController pushViewController:viewController animated:YES];
         }
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        // Determine our ratio between the left edge and the right edge.
         CGFloat ratio = 1.f - location.x / CGRectGetWidth([UIApplication sharedApplication].keyWindow.bounds);
         [self updateInteractiveTransition:ratio];
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
@@ -76,7 +74,6 @@
             [self.parentViewController.navigationController popViewControllerAnimated:YES];
         }
     } else if (recognizer.state == UIGestureRecognizerStateChanged) {
-        // Determine our ratio between the left edge and the right edge.
         CGFloat ratio = location.x / CGRectGetWidth([UIApplication sharedApplication].keyWindow.bounds);
         [self updateInteractiveTransition:ratio];
     } else if (recognizer.state == UIGestureRecognizerStateEnded) {
@@ -125,13 +122,11 @@
     if (self.interactive) {
         // nop as per documentation
     } else {
-        // This code is lifted wholesale from the TLTransitionAnimator class
         UIViewController *fromViewController = [transitionContext viewControllerForKey:UITransitionContextFromViewControllerKey];
         UIViewController *toViewController = [transitionContext viewControllerForKey:UITransitionContextToViewControllerKey];
         
         CGRect endFrame = [[transitionContext containerView] bounds];
-        
-        // The order of these matters – determines the view hierarchy order.
+
         if (self.isPresenting) {
             [transitionContext.containerView addSubview:fromViewController.view];
             [transitionContext.containerView addSubview:toViewController.view];
